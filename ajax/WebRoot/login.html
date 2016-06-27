@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>login.html</title>
+
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+<script type="text/javascript">
+	//创建ajax引擎
+	function getXmlHttpObject() {
+
+		var xmlHttpRequest;
+		//不同的浏览器获取对象XmlHttpRequest对象的方式不同
+		if (window.ActiveXObject) {
+			//window.alert("IE");
+			xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+
+		} else {
+			//window.alert("ff");
+			xmlHttpRequest = new XMLHttpRequest();
+		}
+		return xmlHttpRequest;
+	}
+
+	//验证用户名是否存在
+	var myXmlHttpRequest;
+	function checkName() {
+		myXmlHttpRequest = getXmlHttpObject();
+		//怎么判断创建是否成功
+		if (myXmlHttpRequest) {
+			// window.alert("创建ajax引擎成功");
+			//通过myXmlHttpRequest对象发送请求到服务器的某个页面
+			//第一个参数是：请求的方式，get/post
+			//第二个参数：指定URL,对哪个页面发出ajax请求（本质仍然是http请求）
+			//第三个参数，true表示使用异步机制
+			var url = "/ajax/LoginClServlet";
+			var date = "username=" + $("username").value;
+			//window.alert(url);
+			myXmlHttpRequest.open("post", url, true);
+
+			//使用post请求时，这句话是必须写的
+			myXmlHttpRequest.setRequestHeader("Content-Type",
+					"application/x-www-form-urlencoded");
+
+			//指定回调函数，chuli是函数名
+			myXmlHttpRequest.onreadystatechange = chuli;
+
+			//真的发送请求,如果是get请求，则填入null即可，如果是post请求，则填入实际的数据
+			myXmlHttpRequest.send(date);
+		} else {
+			window.alert("创建失败");
+		}
+	}
+
+	//回调函数
+	function chuli() {
+		//window.alert("处理函数被调用"+myXmlHttpRequest.readyState);
+		//我要取出从LoginClServlet中返回的数据,4表示对象状态是已完成
+		if (myXmlHttpRequest.readyState == 4) {
+			if (myXmlHttpRequest.status == 200) {
+				// window.alert("服务器返回了"+myXmlHttpRequest.responseText);
+				//获取服务器返回的格式是html格式的数据
+				//$("myres").value = myXmlHttpRequest.responseText;
+
+				//获取服务器返回的数据格式是XML格式
+				//获取mes节点
+				//  var mes = myXmlHttpRequest.responseXML.getElementsByTagName("mes");
+				//取出mes节点值
+				//   var mes_val = mes[0].childNodes[0].nodeValue;
+				//  $("myres").value = mes_val;
+
+				//获取服务器返回的数据格式是json的数据
+				var mes = myXmlHttpRequest.responseText;
+				//使用eval函数将mes字串，转成对应的对象
+				var mes_obj = eval("(" + mes + ")");
+				$("myres").value = mes_obj.res;
+			}
+		}
+	}
+
+	//这里写一个函数
+	function $(id) {
+		return document.getElementById(id);
+	}
+</script>
+
+</head>
+<body>
+	<form action="" method="post">
+		用户名：<input type="text" onkeyup="checkName();" name="username"
+			id="username"> <input type="button" onclick="checkName();"
+			value="验证用户名"> <input style="border-width: 0;color: red"
+			type="text" id="myres"> <br /> 密码：<input type="password"
+			name="password" id="password"><br /> 电子邮件：<input type="text"
+			name="email"><br /> <input type="submit" value="用户注册">
+
+	</form>
+</body>
+</html>

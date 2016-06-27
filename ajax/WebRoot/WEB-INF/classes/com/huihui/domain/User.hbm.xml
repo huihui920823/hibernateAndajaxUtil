@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 该文件用于配置domain对象和表的映射关系 -->
+<!-- 映射文件需要一个dtd来指定格式 -->
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.huihui.domain">
+	<class name="User" table="user">
+	<!-- id元素用于指定主键属性 -->
+		<id name="id" type="java.lang.Integer" column="id">
+		<!-- 该元素用于指定主键值生成策略  -->
+			<generator class="increment"></generator>
+		</id>
+		<property name="name" type="java.lang.String" column="name" not-null="false"></property>
+		<property name="password" type="java.lang.String" column="password" not-null="false"></property>
+		<property name="age" type="java.lang.Integer" column="age" not-null="false"></property>
+		<property name="sex" type="java.lang.String" column="sex" not-null="false"></property>
+	</class>
+</hibernate-mapping>
